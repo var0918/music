@@ -1,0 +1,180 @@
+// Mood-based Music Player React App (Single File Example)
+// To run: Place this code in App.js in a Create React App project (or use codesandbox.io/new -> React).
+// Note: Replace audio URLs with your own or royalty-free tracks for production.
+
+import React, { useState, useRef } from "react";
+
+const moodSongs = {
+  Happy: {
+    title: "On Top of the World",
+    artist: "Imagine Dragons",
+    src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+  },
+  Sad: {
+    title: "Someone Like You",
+    artist: "Adele",
+    src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"
+  },
+  Energetic: {
+    title: "Can't Stop the Feeling!",
+    artist: "Justin Timberlake",
+    src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"
+  },
+  Relaxed: {
+    title: "Weightless",
+    artist: "Marconi Union",
+    src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3"
+  }
+};
+
+const moods = Object.keys(moodSongs);
+
+export default function App() {
+  const [mood, setMood] = useState("");
+  const [currentSong, setCurrentSong] = useState(null);
+  const audioRef = useRef(null);
+
+  const handleMoodChange = (selectedMood) => {
+    setMood(selectedMood);
+    setCurrentSong(moodSongs[selectedMood]);
+    // Auto-play new song
+    setTimeout(() => {
+      audioRef.current && audioRef.current.play();
+    }, 100);
+  };
+
+  return (
+    <div style={styles.app}>
+      <header>
+        <h1 style={styles.header}>Mood-based Music Player</h1>
+      </header>
+      <div style={styles.selector}>
+        <h2>Select your mood:</h2>
+        <div style={styles.buttonRow}>
+          {moods.map((m) => (
+            <button
+              key={m}
+              style={{
+                ...styles.moodBtn,
+                background: m === mood ? "#4e4376" : "#2b5876"
+              }}
+              onClick={() => handleMoodChange(m)}
+            >
+              {m}
+            </button>
+          ))}
+        </div>
+      </div>
+      {currentSong && (
+        <div style={styles.player}>
+          <h3>Now Playing:</h3>
+          <div style={styles.songInfo}>
+            <span style={styles.songTitle}>{currentSong.title}</span>
+            {" — "}
+            <span style={styles.songArtist}>{currentSong.artist}</span>
+          </div>
+          <audio ref={audioRef} src={currentSong.src} controls style={styles.audio} />
+          <div style={styles.controls}>
+            <button
+              style={styles.playBtn}
+              onClick={() => audioRef.current && audioRef.current.play()}
+            >
+              Play ▶
+            </button>
+            <button
+              style={styles.playBtn}
+              onClick={() => audioRef.current && audioRef.current.pause()}
+            >
+              Pause ⏸
+            </button>
+          </div>
+        </div>
+      )}
+      <footer style={styles.footer}>
+        <p>© 2025 Mood Music Player. Demo songs for educational purposes.</p>
+      </footer>
+    </div>
+  );
+}
+
+// Inline styles for simplicity
+const styles = {
+  app: {
+    maxWidth: 500,
+    margin: "32px auto",
+    background: "#fff",
+    borderRadius: 12,
+    boxShadow: "0 6px 24px rgba(0,0,0,0.11)",
+    padding: "32px 24px 16px 24px",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    fontFamily: "'Segoe UI', Arial, sans-serif",
+    minHeight: "95vh",
+    backgroundImage: "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)"
+  },
+  header: {
+    margin: "0 0 24px 0",
+    color: "#2b5876",
+    fontSize: "2rem"
+  },
+  selector: {
+    marginBottom: 32,
+    textAlign: "center"
+  },
+  buttonRow: {
+    marginTop: 12,
+    display: "flex",
+    flexWrap: "wrap",
+    gap: 14,
+    justifyContent: "center"
+  },
+  moodBtn: {
+    background: "#2b5876",
+    color: "#fff",
+    border: "none",
+    borderRadius: 22,
+    padding: "10px 24px",
+    fontSize: "1rem",
+    cursor: "pointer",
+    transition: "background 0.3s"
+  },
+  player: {
+    marginTop: 18,
+    textAlign: "center"
+  },
+  songInfo: {
+    margin: "12px 0 6px 0",
+    fontWeight: "bold",
+    fontSize: "1.08rem"
+  },
+  songTitle: {
+    color: "#185a9d"
+  },
+  songArtist: {
+    color: "#43cea2"
+  },
+  controls: {
+    marginTop: 10
+  },
+  playBtn: {
+    margin: "0 10px",
+    padding: "6px 18px",
+    borderRadius: 18,
+    border: "none",
+    background: "#43cea2",
+    color: "#fff",
+    fontSize: "1rem",
+    cursor: "pointer",
+    transition: "background 0.2s"
+  },
+  audio: {
+    marginTop: 10,
+    width: "80%"
+  },
+  footer: {
+    marginTop: 40,
+    fontSize: "0.9rem",
+    color: "#aaa"
+  }
+};
